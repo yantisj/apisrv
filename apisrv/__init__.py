@@ -88,7 +88,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, config['apisrv']['database']),
-    SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(app.root_path, config['apisrv']['database']),
+    SQLALCHEMY_DATABASE_URI='sqlite:///' + \
+        os.path.join(app.root_path, config['apisrv']['database']),
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
 ))
 
@@ -116,5 +117,3 @@ limiter = Limiter(
 import apisrv.errors
 import apisrv.views
 import apisrv.user
-
-

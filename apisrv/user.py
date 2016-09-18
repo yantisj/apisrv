@@ -25,6 +25,7 @@
 #    delete this exception statement from all source files in the program,
 #    then also delete it in the license file.
 #
+# pylint: disable=E1101
 """
 API User Functions
 """
@@ -32,14 +33,12 @@ import sys
 import logging
 import time
 from passlib.hash import sha256_crypt
-
-from flask_sqlalchemy import SQLAlchemy
-from apisrv import auth, config, db
+from apisrv import auth, db
 
 logger = logging.getLogger(__name__)
 
 class User(db.Model):
-    """ SQL User Model"""
+    """ SQL User Model """
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(120), unique=True)
@@ -72,7 +71,7 @@ def authenticate_user(username, passwd):
         time.sleep(1)
         logger.info("Authentication Error: User not found in DB: %s", username)
         return False
-    
+
     if authenticated:
         logger.debug("Successfully Authenticated user: %s", username)
     else:
@@ -97,12 +96,12 @@ def add_user(username, passwd):
         raise Exception("Error: User already exists in DB")
     elif len(passwd) < 6:
         print("Error: Password must be 6 or more characters", file=sys.stderr)
-        exit(1)       
+        exit(1)
     else:
         logger.info("Adding new user to the database: %s", username)
 
         phash = get_phash(passwd)
-        
+
         newuser = User(username, phash)
         db.session.add(newuser)
         db.session.commit()
@@ -147,4 +146,3 @@ def del_user(username):
 
         print("Error: User does not exists in DB", file=sys.stderr)
         exit(1)
-
