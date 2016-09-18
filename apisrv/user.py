@@ -33,9 +33,8 @@ import logging
 import time
 from passlib.hash import sha256_crypt
 
-import sqlite3
 from flask_sqlalchemy import SQLAlchemy
-from apisrv import auth, config, get_db, connect_db, db
+from apisrv import auth, config, db
 
 logger = logging.getLogger(__name__)
 
@@ -58,9 +57,7 @@ class User(db.Model):
 def verify_password(username, password):
     """API Password Verification"""
 
-    if authenticate_user(username, password):
-        return True
-    return False
+    return authenticate_user(username, password)
 
 def authenticate_user(username, passwd):
     """ Authenticate a user """
@@ -83,6 +80,10 @@ def authenticate_user(username, passwd):
 
     return authenticated
 
+def get_phash(passwd):
+    """ Get a new hashed password """
+
+    return sha256_crypt.encrypt(passwd, rounds=100000)
 
 def add_user(username, passwd):
     """
@@ -100,7 +101,7 @@ def add_user(username, passwd):
     else:
         logger.info("Adding new user to the database: %s", username)
 
-        phash = sha256_crypt.encrypt(passwd)
+        phash = get_phash(passwd)
         
         newuser = User(username, phash)
         db.session.add(newuser)
@@ -119,7 +120,7 @@ def update_password(username, passwd):
     elif user:
         logger.info("Updating password for user: %s", username)
 
-        phash = sha256_crypt.encrypt(passwd)
+        phash = phash = get_phash(passwd)
 
         user.password = phash
         db.session.commit()

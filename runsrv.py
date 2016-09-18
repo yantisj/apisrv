@@ -41,7 +41,7 @@ if config['apisrv']['https'] != '0':
     app.run(host='0.0.0.0', port=int(config['apisrv']['port']), \
             ssl_context=context, threaded=True, debug=debug)
 
-# Localhost development server
+# Localhost-only HTTP development server
 else:
     logger.warning("HTTPS is not configured, defaulting to localhost only")
     app.run(debug=debug, port=int(config['apisrv']['port']))

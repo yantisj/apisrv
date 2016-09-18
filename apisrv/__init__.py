@@ -35,7 +35,6 @@ import re
 import logging
 from logging.handlers import RotatingFileHandler
 import configparser
-import sqlite3
 from flask import Flask, jsonify, request, g, make_response
 from flask_httpauth import HTTPBasicAuth
 from flask_limiter import Limiter
@@ -65,7 +64,7 @@ logger = logging.getLogger('')
 logger.setLevel(logging.INFO)
 lformat = logging.Formatter('%(asctime)s %(name)s:%(levelname)s: %(message)s')
 
-# Debug mode
+# Debug mode Enabled
 if 'debug' in config['apisrv'] and int(config['apisrv']['debug']) != 0:
     debug = int(config['apisrv']['debug'])
     logger.setLevel(logging.DEBUG)
@@ -91,9 +90,6 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, config['apisrv']['database']),
     SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(app.root_path, config['apisrv']['database']),
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
-    #SECRET_KEY='development key',
-    #USERNAME='dbuser',
-    #PASSWORD='dbpass'
 ))
 
 # Auth module
@@ -109,35 +105,12 @@ limiter = Limiter(
     global_limits=flask_limits
 )
 
-# Helper Functions
-def get_db():
-    """Opens a new database connection if there is none yet for the
-    current application context.
-    """
-    if not hasattr(g, 'sqlite_db'):
-        g.sqlite_db = connect_db()
-    return g.sqlite_db
+# Not Required with SQLAlchemy
+# @app.teardown_appcontext
+# def close_db(error):
+#     """Closes the database again at the end of the request."""
+#     db.remove()
 
-def connect_db():
-    """Connects to the specific database."""
-    conn = sqlite3.connect(app.config['DATABASE'])
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def initialize_db():
-    """ Initialize the database structure"""
-    conn = connect_db()
-    c = conn.cursor()
-    c.execute('''CREATE TABLE user
-                 (username text, password text, token text) ''')
-    conn.commit()
-    conn.close()
-
-@app.teardown_appcontext
-def close_db(error):
-    """Closes the database again at the end of the request."""
-    if hasattr(g, 'sqlite_db'):
-        g.sqlite_db.close()
 
 # Safe circular imports per Flask guide
 import apisrv.errors

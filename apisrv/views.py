@@ -98,6 +98,6 @@ def app_getinfo():
 def app_index():
     """Index identifying the server"""
     response = {"message": app_name + \
-                " server: Authentication required for use",
+                " api server: Authentication required for use",
                 "status": "200"}
     return jsonify(response)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Copyright (c) 2016 "Jonathan Yantis"
 #
 #    This program is free software: you can redistribute it and/or  modify
@@ -29,11 +29,10 @@
 """
 Test the API Application
 """
-import os
-import apisrv
+from base64 import b64encode
 import unittest
 import tempfile
-from base64 import b64encode
+import apisrv
 
 headers = {
     'Authorization': 'Basic %s' % b64encode(b"testuser:testpass").decode("ascii")
