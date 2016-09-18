@@ -32,6 +32,7 @@ but it could be extended with LDAP support and auth tokens. Please contact me at
 ## Testing
 * You must activate the virtualenv before starting the server
 * Initialize DB and Add a user: ```./ctlsrv.py --init; ./ctlsrv.py --add testuser```
+* Use the password testpass for the examples below
 * Start the server: ```./runsrv.py```
 * Test the info request with a browser: [/test/api/v1.0/info?testvar=testing](http://localhost:5000/test/api/v1.0/info?testvar=testing)
 * Test via CURL: ```curl -u testuser:testpass http://localhost:5000/test/api/v1.0/info?var1=test```
