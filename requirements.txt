@@ -1,0 +1,8 @@
+pylint
+requests
+flask
+flask_httpauth
+flask_limiter
+passlib
+sqlalchemy
+flask_sqlalchemy

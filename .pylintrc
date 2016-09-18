@@ -1,0 +1,4 @@
+[MASTER]
+disable=invalid-name
+ignored-modules=flask_sqlalchemy
+disable=E1101
