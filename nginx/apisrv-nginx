@@ -1,0 +1,11 @@
+server {
+    listen 9000 ssl;
+        server_name 0.0.0.0;
+        ssl_certificate /apisrv.crt;
+	    ssl_certificate_key /apisrv.key;
+
+    location / {
+            include uwsgi_params;
+	        uwsgi_pass apisrv:9001;
+	    }
+}

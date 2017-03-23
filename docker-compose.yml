@@ -1,0 +1,48 @@
+version: '2'
+services:
+
+  nginx-api:
+    image: yantisj/apisrv-nginx
+    restart: always
+    command: /bin/sh -c "nginx -g 'daemon off;'"
+    build:
+      context: ./nginx/
+      dockerfile: Dockerfile.api
+    expose:
+      - "9080"
+      - "9000"
+    ports:
+      - ${APISRV_docker_api_port}:9000
+    volumes:
+      - ${APISRV_docker_logdir}apisrv/:/var/log/nginx
+    depends_on:
+      - apisrv
+
+  apisrv:
+    image: yantisj/apisrv
+    env_file: ${APISRV_docker_env}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - "9001"
+    command: su -c '/usr/local/bin/uwsgi --ini /opt/apisrv/extra/wsgi-api.ini' apisrv
+    volumes:
+     - ${APISRV_docker_libdir}:/opt/apisrv/lib
+     - ${APISRV_docker_logdir}:/var/log/apisrv
+    depends_on:
+     - redis
+
+  cmd:
+    image: yantisj/apisrv
+    env_file: ${APISRV_docker_env}
+    volumes:
+     - ${APISRV_docker_libdir}:/opt/apisrv/lib
+     - ${APISRV_docker_logdir}:/var/log/apisrv
+    depends_on:
+     - redis
+
+  redis:
+    image: redis:3.2.6-alpine
+    environment:
+      - REDIS_PASS=**None**

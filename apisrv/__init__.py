@@ -41,10 +41,33 @@ debug = 0
 # Flask Limits for Safety
 flask_limits = ["1000 per day", "100 per hour", "5 per minute"]
 
+def override_config(cfg):
+    """ Override/Add config file variables from environment
+        Note: Only adds variables if [section] exists
+    """
+
+    for en in os.environ:
+        oride = re.search(r'^APISRV_([a-zA-Z]+)_(\w+)', en)
+        if oride:
+            if oride.group(1) in cfg:
+                #print('APISRV Override', oride.group(1), oride.group(2), os.environ[en])
+                cfg[oride.group(1)][oride.group(2)] = os.environ[en]
+
+    return cfg
+
 # Initialize Configuration
-config_file = 'api.conf'
+config_file = 'apisrv.ini'
+
+# Environment Override
+if 'APISRV_config_file' in os.environ:
+    config_file = os.environ['APISRV_config_file']
+
 config = configparser.ConfigParser()
 config.read(config_file)
+
+# Override config file from environment variables
+config = override_config(config)
+
 
 # Check for sane config file
 if 'apisrv' not in config:

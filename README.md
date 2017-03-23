@@ -51,5 +51,17 @@ but it could be extended with LDAP support and auth tokens. Please contact me at
 * Make sure you have the latest version of the Python Extension installed
 * Use Command+Shift+P: Python: Select Workspace Interpreter and choose python under venv/bin
 
+## Running in Production with Docker
+
+The docker environment changes the API server port to 9000 and runs it behind nginx. Replace the apisrv.crt and apisrv.key certificate files in the nginx directory with valid certs for production. Everything runs as the apisrv user in the container.
+
+* Copy the docker/env-file to .env and customize
+* Source the docker start-env file: ```source docker/start-env.sh```
+* Copy the SQL database to lib/: ```mkdir lib; cp api.sql lib/```
+* Build the docker images: ```docker-compose build```
+* Bring up the API server: ```docker-compose up```
+* Optionally attach to the container: ```att_api```
+
+
 ## Further Reading
 * [Creating a REST API](https://realpython.com/blog/python/api-integration-in-python/)

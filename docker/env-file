@@ -1,0 +1,18 @@
+TERM=xterm-256color
+
+# Stdout logging for docker
+APISRV_LOG_STDOUT=1
+
+# Config File
+APISRV_config_file=/etc/apisrv/apisrv.ini
+
+# API Port
+APISRV_apisrv_port=9000
+
+# APISRV Variables
+APISRV_apprlib_redis_host=redis
+
+APISRV_apisrv_cache_short=2
+APISRV_apisrv_cache_long=4
+APISRV_apisrv_apisecret=**GENERATE_RANDOM**
+
